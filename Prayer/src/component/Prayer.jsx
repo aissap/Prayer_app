@@ -1,10 +1,12 @@
-import React from 'react'
+import React from "react";
 
-export default function Prayer({name, time}) {
+function Prayer({ name, time }) {
   return (
-    <div className='prayer'>
-          <p className='name_prayer'>{name}</p> 
-          <p className='time_prayer'> {time} </p> 
+    <div className="prayer">
+      <h4>{name}</h4>
+      <p>{time}</p>
     </div>
-  )
+  );
 }
+
+export default Prayer;

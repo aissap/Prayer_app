@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Prayer from "./component/Prayer";
+import Prayer from "./component/Prayer"; // Make sure this path is correct
 
 function App() {
   const cities = [
@@ -33,17 +33,21 @@ function App() {
 
   const [selectedCity, setSelectedCity] = useState("casablanca");
   const [prayerTimes, setPrayerTimes] = useState({});
+  const [loading, setLoading] = useState(true);
 
-  // Fetch Prayer Times
   useEffect(() => {
     const fetchPrayerTimes = async () => {
+      setLoading(true);
       try {
         const response = await axios.get(
-          `http://api.aladhan.com/v1/timingsByCity?city=${selectedCity}&country=Morocco&method=2`
+          `https://api.aladhan.com/v1/timingsByCity?city=${selectedCity}&country=Morocco&method=2`
         );
         setPrayerTimes(response.data.data.timings);
       } catch (error) {
         console.error("Error fetching prayer times:", error);
+        setPrayerTimes({});
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -74,7 +78,10 @@ function App() {
             <h4>{new Date().toLocaleDateString("ar-MA")}</h4>
           </div>
         </div>
-        {prayerTimes ? (
+
+        {loading ? (
+          <p>جاري تحميل أوقات الصلاة...</p>
+        ) : (
           <>
             <Prayer name="الفجر" time={prayerTimes.Fajr} />
             <Prayer name="الظهر" time={prayerTimes.Dhuhr} />
@@ -82,8 +89,6 @@ function App() {
             <Prayer name="المغرب" time={prayerTimes.Maghrib} />
             <Prayer name="العشاء" time={prayerTimes.Isha} />
           </>
-        ) : (
-          <p>جاري تحميل أوقات الصلاة...</p>
         )}
       </div>
     </section>
